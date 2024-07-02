@@ -1,0 +1,32 @@
+-- What is the total sum revenue when grouped by industry?
+SELECT industry, ROUND(sum(revenue), 0) AS total_revenue
+FROM fortune_companies
+GROUP BY industry
+ORDER BY total_revenue asc;
+
+-- What is the average employee tenure, paid time off and maternity leave weeks?
+SELECT AVG(avg_employee_tenure), AVG(paid_time_off_days), AVG(maternity_leave_weeks)
+FROM fortune_companies;
+
+-- Based on the average employee tenure, what is the turnover rate per industry? 
+SELECT industry,
+CASE WHEN avg_employee_tenure >=7 THEN "Above Average"
+WHEN avg_employee_tenure >=6 THEN "Average"
+WHEN avg_employee_tenure >=0 THEN "Below Average"
+END AS Turnover_Rate
+FROM fortune_companies
+GROUP BY industry;
+
+-- Which companies give their employees at least the average amount of paid time off?
+SELECT company_name, AVG (paid_time_off_days) AS "Paid Time Off"
+FROM fortune_companies
+GROUP BY company_name
+HAVING paid_time_off_days>=18
+ORDER BY paid_time_off_days desc;
+
+ -- Which compaines meet the average mark for paid time off and maternity leave while supplying healthcare benefits?
+ SELECT company_name, healthcare_benefits, paid_time_off_days, maternity_leave_weeks
+ FROM fortune_companies
+ WHERE healthcare_benefits=1
+ AND paid_time_off_days >=18
+ AND maternity_leave_weeks >=10;
