@@ -24,7 +24,7 @@ ON customers.order_id = FebSales.orderID
 WHERE length(FebSales.orderID) = 6
 AND FebSales.orderID <> 'Order ID';
 
-#.4 Which product was the cheapest one sold in January, and what was the price?
+#4. Which product was the cheapest one sold in January, and what was the price?
 
 SELECT DISTINCT price, product
 FROM BIT_DB.JanSales
@@ -62,6 +62,60 @@ FROM BIT_DB.FebSales
 WHERE location like '%Los Angeles%'
 GROUP BY product;
 
+#9. Which locations in New York received at least 3 orders in January, and how many orders did they each receive?;
+
+SELECT DISTINCT count(orderID), location
+FROM BIT_DB.JanSales
+WHERE length(orderid) = 6
+AND orderid <> 'Order ID'
+AND location LIKE '%NY%'
+GROUP BY location
+HAVING count(orderID) > 2;
+
+#10. How many of each type of headphone were sold in February?;
+
+SELECT product , sum(quantity)
+FROM BIT_DB.FebSales
+WHERE product LIKE '%Headphones%'
+GROUP BY product;
+
+#11. What was the average amount spent per each account in February?;
+
+SELECT DISTINCT Customers.acctnum AS acctnum, ROUND(AVG(FebSales.price*FebSales.Quantity)/COUNT(Customers.acctnum),2) AS avg_spent
+FROM BIT_DB.FebSales AS FebSales
+LEFT JOIN BIT_DB.customers AS Customers
+ON FebSales.orderid = Customers.order_id
+WHERE length(customers.order_id) = 6
+AND customers.order_id <> 'Order ID'
+GROUP BY customers.acctnum;
+
+#12. What was the average amount spent per total account in February?;
+
+SELECT AVG(price*Quantity)
+FROM BIT_DB.FebSales FebSales
+LEFT JOIN BIT_DB.customers cust
+ON FebSales.orderID = cust.order_id
+WHERE length(FebSales.orderID) = 6
+AND FebSales.orderID <> 'Order_ID';
+
+#13. What was the average quantity of products purchased per account in February?;
+
+SELECT sum(FebSales.Quantity)/count(cust.acctnum)
+FROM BIT_DB.FebSales FebSales
+LEFT JOIN BIT_DB.customers Cust
+ON FebSales.orderID = Cust.order_id
+WHERE length(FebSales.orderID) = 6
+AND FebSales.orderID <> 'Order_ID';
+
+#14. Which product brought in the most revenue in January and how much revenue did it bring in total?;
+
+SELECT sum(quantity*price) AS total_revenue, product
+FROM BIT_DB.JanSales
+WHERE length(OrderID) = 6
+AND OrderID <> 'Order ID'
+GROUP BY product
+ORDER BY total_revenue desc
+LIMIT 1;
 
 
 
